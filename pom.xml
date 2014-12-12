@@ -672,9 +672,9 @@
                 </plugin>
 
                 <plugin>
-                    <groupId>com.mycila</groupId>
+                    <groupId>org.codehaus.mojo</groupId>
                     <artifactId>license-maven-plugin</artifactId>
-                    <version>2.5</version>
+                    <version>1.8</version>
                 </plugin>
 
                 <!-- Eclipse IDE specific settings -->
