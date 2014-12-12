@@ -93,7 +93,7 @@
         </repository>
         <repository>
             <id>Lucene snapshots</id>
-            <url>https://download.elasticsearch.org/lucenesnapshots/1641343</url>
+            <url>https://download.elasticsearch.org/lucenesnapshots/1644303</url>
         </repository>
     </repositories>
 
