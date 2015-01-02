@@ -1,2 +1,70 @@
-Common project for all elasticsearch java projects
+= Common project for all elasticsearch java projects
+
+This project provides a `pom` parent artifact for elasticsearch java projects such as core and
+official plugins.
+
+It declares versions to use for dependencies and plugins so when something needs to be updated within multiple
+projects, only this project basically needs an update.
+
+== Plugins
+
+To define `elasticsearch-parent` as a parent project in a plugin project, you just need to add the following in
+`pom.xml` file:
+
+[source,xml]
+--------------------------------------------------
+<parent>
+    <groupId>org.elasticsearch</groupId>
+    <artifactId>elasticsearch-parent</artifactId>
+    <version>2.0.0</version>
+</parent>
+--------------------------------------------------
+
+Then, depending on a given library can be done without explicitly setting a version (nor a scope):
+
+[source,xml]
+--------------------------------------------------
+<dependencies>
+    <dependency>
+        <groupId>org.hamcrest</groupId>
+        <artifactId>hamcrest-all</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.elasticsearch</groupId>
+        <artifactId>elasticsearch</artifactId>
+    </dependency>
+</dependencies>
+--------------------------------------------------
+
+Same goes for plugins:
+
+[source,xml]
+--------------------------------------------------
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+        </plugin>
+    </plugins>
+</build>
+--------------------------------------------------
+
+If you need to depend on a parent SNAPSHOT version, you need to declare the sonatype SNAPSHOT repository:
+
+* either add this to your `~/.m2/settings.xml` or to the `pom.xml`:
+
+[source,xml]
+--------------------------------------------------
+<repositories>
+    <repository>
+        <id>oss-snapshots</id>
+        <name>Sonatype OSS Snapshots</name>
+        <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+    </repository>
+</repositories>
+--------------------------------------------------
+
+Note that to release a plugin which depends on a SNAPSHOT parent version, a release of the parent project is
+required first.
 

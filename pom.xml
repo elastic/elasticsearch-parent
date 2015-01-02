@@ -90,12 +90,19 @@
 
     <repositories>
         <repository>
-            <id>Codehaus Snapshots</id>
+            <id>codehaus-snapshots</id>
+            <name>Codehaus Snapshots</name>
             <url>http://repository.codehaus.org/</url>
         </repository>
         <repository>
-            <id>Lucene snapshots</id>
+            <id>lucene-snapshots</id>
+            <name>Lucene snapshots</name>
             <url>https://download.elasticsearch.org/lucenesnapshots/1646179</url>
+        </repository>
+        <repository>
+            <id>oss-snapshots</id>
+            <name>Sonatype OSS Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </repository>
     </repositories>
 
