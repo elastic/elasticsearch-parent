@@ -37,7 +37,7 @@
 
         <!-- libraries -->
         <lucene.version>5.1.0</lucene.version>
-        <lucene.maven.version>5.1.0-snapshot-1652032</lucene.maven.version>
+        <lucene.maven.version>5.1.0-snapshot-1654549</lucene.maven.version>
         <jackson.version>2.4.2</jackson.version>
         <slf4j.version>1.6.2</slf4j.version>
         <log4j.version>1.2.17</log4j.version>
@@ -97,7 +97,7 @@
         <repository>
             <id>lucene-snapshots</id>
             <name>Lucene snapshots</name>
-            <url>https://download.elasticsearch.org/lucenesnapshots/1652032</url>
+            <url>https://download.elasticsearch.org/lucenesnapshots/1654549</url>
         </repository>
         <repository>
             <id>oss-snapshots</id>
