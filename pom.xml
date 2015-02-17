@@ -54,7 +54,7 @@
         <tests.heap.size>512m</tests.heap.size>
         <tests.heapdump.path>${basedir}/logs/</tests.heapdump.path>
         <tests.topn>5</tests.topn>
-        <execution.hint.file>.local-${project.version}-execution-hints.log</execution.hint.file>
+        <execution.hint.file>.local-${elasticsearch.version}-execution-hints.log</execution.hint.file>
         <tests.assertion.disabled>false</tests.assertion.disabled>
         <tests.verbose>false</tests.verbose>
         <tests.seed></tests.seed>
