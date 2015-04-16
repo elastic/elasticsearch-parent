@@ -45,6 +45,7 @@
 
         <!-- Test properties -->
         <tests.jvms>auto</tests.jvms>
+        <java.permGenSpace>-XX:MaxPermSize=128m</java.permGenSpace>
         <tests.shuffle>true</tests.shuffle>
         <tests.output>onerror</tests.output>
         <tests.client.ratio></tests.client.ratio>
@@ -547,7 +548,7 @@
                                 <jvmArgs>
                                     <param>-Xmx${tests.heap.size}</param>
                                     <param>-Xms${tests.heap.size}</param>
-                                    <param>-XX:MaxPermSize=128m</param>
+                                    <param>${java.permGenSpace}</param>
                                     <param>-Djava.library.path=${project.basedir}/lib/sigar</param>
                                     <param>-XX:MaxDirectMemorySize=512m</param>
                                     <param>-Des.logger.prefix=</param>
