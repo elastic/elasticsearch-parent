@@ -887,6 +887,12 @@
                         </excludes>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <!-- We just declare which plugin version to use. Each project can have then its own settings -->
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-invoker-plugin</artifactId>
+                    <version>1.10</version>
+                </plugin>
 
             </plugins>
         </pluginManagement>
