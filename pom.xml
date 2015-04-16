@@ -899,6 +899,12 @@
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>2.10.3</version>
                 </plugin>
+                <plugin>
+                    <!-- We just declare which plugin version to use. Each project can have then its own settings -->
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-verifier-plugin</artifactId>
+                    <version>1.1</version>
+                </plugin>
 
             </plugins>
         </pluginManagement>
