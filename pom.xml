@@ -39,6 +39,7 @@
         <!-- libraries -->
         <lucene.version>4.10.4</lucene.version>
         <lucene.maven.version>4.10.4</lucene.maven.version>
+        <testframework.version>2.1.14</testframework.version>
         <jackson.version>2.5.1</jackson.version>
         <slf4j.version>1.6.2</slf4j.version>
         <log4j.version>1.2.17</log4j.version>
@@ -52,7 +53,8 @@
         <tests.bwc.path>${project.basedir}/backwards</tests.bwc.path>
         <tests.locale>random</tests.locale>
         <tests.timezone>random</tests.timezone>
-        <es.logger.level>INFO</es.logger.level>
+        <tests.slow>false</tests.slow>
+        <es.logger.level>ERROR</es.logger.level>
         <tests.heap.size>512m</tests.heap.size>
         <tests.heapdump.path>${basedir}/logs/</tests.heapdump.path>
         <tests.topn>5</tests.topn>
@@ -64,7 +66,6 @@
         <tests.bwc.path></tests.bwc.path>
         <tests.bwc.version></tests.bwc.version>
         <tests.jvm.argline></tests.jvm.argline>
-        <tests.processors></tests.processors>
         <tests.appendseed></tests.appendseed>
         <tests.iters></tests.iters>
         <tests.maxfailures></tests.maxfailures>
@@ -119,7 +120,7 @@
             <dependency>
                 <groupId>com.carrotsearch.randomizedtesting</groupId>
                 <artifactId>randomizedtesting-runner</artifactId>
-                <version>2.1.13</version>
+                <version>${testframework.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -499,7 +500,7 @@
                 <plugin>
                     <groupId>com.carrotsearch.randomizedtesting</groupId>
                     <artifactId>junit4-maven-plugin</artifactId>
-                    <version>2.1.13</version>
+                    <version>${testframework.version}</version>
                     <executions>
                         <execution>
                             <id>tests</id>
@@ -511,6 +512,7 @@
                                 <heartbeat>20</heartbeat>
                                 <jvmOutputAction>pipe,warn</jvmOutputAction>
                                 <leaveTemporary>true</leaveTemporary>
+                                <ifNoTests>fail</ifNoTests>
                                 <listeners>
                                     <report-ant-xml mavenExtensions="true"
                                                     dir="${project.build.directory}/surefire-reports"/>
@@ -523,8 +525,20 @@
                                             showStatusFailure="true"
                                             showStatusIgnored="true"
                                             showSuiteSummary="true"
-                                            timestamps="false"/>
-                                    <report-execution-times historyLength="20" file="${basedir}/${execution.hint.file}"/>
+                                            timestamps="false">
+                                      <filtertrace>
+                                         <!-- custom filters: we carefully only omit test infra noise here -->
+                                         <containsstring contains=".SlaveMain." />
+                                         <containsregex pattern="^(\s+at )(org\.junit\.)" />
+                                         <!-- also includes anonymous classes inside these two: -->
+                                         <containsregex pattern="^(\s+at )(com\.carrotsearch\.randomizedtesting.RandomizedRunner)" />
+                                         <containsregex pattern="^(\s+at )(com\.carrotsearch\.randomizedtesting.ThreadLeakControl)" />
+                                         <containsregex pattern="^(\s+at )(com\.carrotsearch\.randomizedtesting.rules\.)" />
+                                         <containsregex pattern="^(\s+at )(org\.apache\.lucene.util\.TestRule)" />
+                                         <containsregex pattern="^(\s+at )(org\.apache\.lucene.util\.AbstractBeforeAfterRule)" />
+                                      </filtertrace>
+                                    </report-text>
+                                <report-execution-times historyLength="20" file="${basedir}/${execution.hint.file}"/>
                                 </listeners>
                                 <assertions>
                                     <enable/>
@@ -568,7 +582,6 @@
                                     <tests.bwc.path>${tests.bwc.path}</tests.bwc.path>
                                     <tests.bwc.version>${tests.bwc.version}</tests.bwc.version>
                                     <tests.jvm.argline>${tests.jvm.argline}</tests.jvm.argline>
-                                    <tests.processors>${tests.processors}</tests.processors>
                                     <tests.appendseed>${tests.appendseed}</tests.appendseed>
                                     <tests.iters>${tests.iters}</tests.iters>
                                     <tests.maxfailures>${tests.maxfailures}</tests.maxfailures>
@@ -831,6 +844,7 @@
                     <version>2.9</version>
                     <configuration>
                         <buildOutputDirectory>eclipse-build</buildOutputDirectory>
+                        <downloadSources>true</downloadSources>
                     </configuration>
                 </plugin>
 
