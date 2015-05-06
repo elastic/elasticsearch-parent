@@ -104,11 +104,6 @@
             </snapshots>
         </repository>
         <repository>
-            <id>codehaus-snapshots</id>
-            <name>Codehaus Snapshots</name>
-            <url>http://repository.codehaus.org/</url>
-        </repository>
-        <repository>
             <id>lucene-snapshots</id>
             <name>Lucene snapshots</name>
             <url>https://download.elasticsearch.org/lucenesnapshots/${lucene.snapshot.revision}</url>
