@@ -93,6 +93,16 @@
 
     <repositories>
         <repository>
+            <id>elasticsearch-releases</id>
+            <url>http://maven.elasticsearch.org/releases</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
             <id>codehaus-snapshots</id>
             <name>Codehaus Snapshots</name>
             <url>http://repository.codehaus.org/</url>
