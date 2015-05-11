@@ -35,6 +35,7 @@
     <properties>
         <!-- elasticsearch stack -->
         <elasticsearch.version>2.0.0-SNAPSHOT</elasticsearch.version>
+        <jvm.executable>${java.home}${file.separator}bin${file.separator}java</jvm.executable>
 
         <!-- libraries -->
         <lucene.version>5.2.0</lucene.version>
@@ -88,7 +89,7 @@
         <tests.cluster></tests.cluster>
         <tests.filter></tests.filter>
         <env.ES_TEST_LOCAL></env.ES_TEST_LOCAL>
-        <tests.security.manager></tests.security.manager>
+        <tests.security.manager>false</tests.security.manager>
         <tests.compatibility></tests.compatibility>
     </properties>
 
@@ -515,8 +516,9 @@
                                 <goal>junit4</goal>
                             </goals>
                             <configuration>
-                                <heartbeat>20</heartbeat>
-                                <jvmOutputAction>pipe,warn</jvmOutputAction>
+                                <jvm>${jvm.executable}</jvm>
+                                <heartbeat>10</heartbeat>
+                                <jvmOutputAction>warn</jvmOutputAction>
                                 <leaveTemporary>true</leaveTemporary>
                                 <ifNoTests>fail</ifNoTests>
                                 <listeners>
@@ -579,7 +581,8 @@
                                 <sysouts>${tests.verbose}</sysouts>
                                 <seed>${tests.seed}</seed>
                                 <haltOnFailure>${tests.failfast}</haltOnFailure>
-                                <uniqueSuiteNames>false</uniqueSuiteNames>
+                                <!-- enforce unique suite names, or reporting stuff can be screwed up -->
+                                <uniqueSuiteNames>true</uniqueSuiteNames>
                                 <systemProperties>
                                     <!-- we use './temp' since this is per JVM and tests are forbidden from writing to CWD -->
                                     <java.io.tmpdir>./temp</java.io.tmpdir>
@@ -625,9 +628,9 @@
                                     <tests.security.manager>${tests.security.manager}</tests.security.manager>
                                     <tests.compatibility>${tests.compatibility}</tests.compatibility>
                                     <java.awt.headless>true</java.awt.headless>
-                                    <!-- everything below is for security manager / test.policy -->
-                                    <junit4.tempDir>${project.build.directory}</junit4.tempDir>
-                                    <java.security.policy>${basedir}/dev-tools/tests.policy</java.security.policy>
+                                    <!-- true if we are running tests from maven (as opposed to IDE, etc).
+                                         allows us to assert certain things work, like libsigar -->
+                                    <tests.maven>true</tests.maven>
                                 </systemProperties>
                             </configuration>
                         </execution>
