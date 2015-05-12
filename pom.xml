@@ -89,7 +89,7 @@
         <tests.cluster></tests.cluster>
         <tests.filter></tests.filter>
         <env.ES_TEST_LOCAL></env.ES_TEST_LOCAL>
-        <tests.security.manager>false</tests.security.manager>
+        <tests.security.manager>true</tests.security.manager>
         <tests.compatibility></tests.compatibility>
     </properties>
 
