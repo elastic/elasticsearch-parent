@@ -80,6 +80,8 @@
         <tests.timeoutSuite></tests.timeoutSuite>
         <tests.showSuccess></tests.showSuccess>
         <tests.integration></tests.integration>
+        <tests.thirdparty></tests.thirdparty>
+        <tests.config></tests.config>
         <tests.enable_mock_modules></tests.enable_mock_modules>
         <tests.rest></tests.rest>
         <tests.rest.suite></tests.rest.suite>
@@ -606,6 +608,8 @@
                                     <tests.timeoutSuite>${tests.timeoutSuite}</tests.timeoutSuite>
                                     <tests.showSuccess>${tests.showSuccess}</tests.showSuccess>
                                     <tests.integration>${tests.integration}</tests.integration>
+                                    <tests.thirdparty>${tests.thirdparty}</tests.thirdparty>
+                                    <tests.config>${tests.config}</tests.config>
                                     <tests.client.ratio>${tests.client.ratio}</tests.client.ratio>
                                     <tests.enable_mock_modules>${tests.enable_mock_modules}</tests.enable_mock_modules>
                                     <tests.assertion.disabled>${tests.assertion.disabled}</tests.assertion.disabled>
