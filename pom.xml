@@ -93,6 +93,7 @@
         <env.ES_TEST_LOCAL></env.ES_TEST_LOCAL>
         <tests.security.manager>true</tests.security.manager>
         <tests.compatibility></tests.compatibility>
+        <tests.ifNoTests>fail</tests.ifNoTests>
     </properties>
 
     <repositories>
@@ -522,7 +523,7 @@
                                 <heartbeat>10</heartbeat>
                                 <jvmOutputAction>warn</jvmOutputAction>
                                 <leaveTemporary>true</leaveTemporary>
-                                <ifNoTests>fail</ifNoTests>
+                                <ifNoTests>${tests.ifNoTests}</ifNoTests>
                                 <listeners>
                                     <report-ant-xml mavenExtensions="true"
                                                     dir="${project.build.directory}/surefire-reports"/>
