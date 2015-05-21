@@ -471,8 +471,15 @@
               </testResource>
               <testResource>
                   <directory>src/test/resources</directory>
+                  <excludes>
+                      <exclude>elasticsearch.yml</exclude>
+                  </excludes>
+              </testResource>
+              <testResource>
+                  <directory>src/test/resources</directory>
+                  <filtering>true</filtering>
                   <includes>
-                      <include>**/*.*</include>
+                      <include>elasticsearch.yml</include>
                   </includes>
               </testResource>
           </testResources>
