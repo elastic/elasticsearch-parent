@@ -122,6 +122,11 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>org.elasticsearch</groupId>
+                <artifactId>dev-tools</artifactId>
+                <version>${elasticsearch.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.hamcrest</groupId>
                 <artifactId>hamcrest-all</artifactId>
                 <version>1.3</version>
@@ -726,12 +731,6 @@
                 </plugin>
                 <plugin>
                     <!-- We just declare which plugin version to use. Each project can have then its own settings -->
-                    <groupId>de.thetaphi</groupId>
-                    <artifactId>forbiddenapis</artifactId>
-                    <version>1.8</version>
-                </plugin>
-                <plugin>
-                    <!-- We just declare which plugin version to use. Each project can have then its own settings -->
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>2.5</version>
@@ -939,7 +938,125 @@
                     <artifactId>maven-checkstyle-plugin</artifactId>
                     <version>2.15</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-remote-resources-plugin</artifactId>
+                    <version>1.5</version>
+                    <configuration>
+                        <resourceBundles>
+                            <resourceBundle>org.elasticsearch:dev-tools:${elasticsearch.version}</resourceBundle>
+                        </resourceBundles>
+                        <outputDirectory>${project.build.directory}/dev-tools</outputDirectory>
+                        <!-- don't include dev-tools in artifacts -->
+                        <attachToMain>false</attachToMain>
+                        <attachToTest>false</attachToTest>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>process</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>de.thetaphi</groupId>
+                    <artifactId>forbiddenapis</artifactId>
+                    <version>1.8</version>
+
+                    <executions>
+                        <execution>
+                            <id>check-forbidden-apis</id>
+                                <configuration>
+                                     <targetVersion>1.7</targetVersion>
+                                     <!-- disallow undocumented classes like sun.misc.Unsafe: -->
+                                     <internalRuntimeForbidden>true</internalRuntimeForbidden>
+                                     <!-- if the used Java version is too new, don't fail, just do nothing: -->
+                                     <failOnUnsupportedJava>false</failOnUnsupportedJava>
+                                     <!-- maven shade plugin is a nightmare -->
+                                     <failOnUnresolvableSignatures>false</failOnUnresolvableSignatures>
+                                     <excludes>
+                                         <exclude>jsr166e/**</exclude>
+                                     </excludes>
+                                     <bundledSignatures>
+                                         <!-- This will automatically choose the right signatures based on 'targetVersion': -->
+                                         <bundledSignature>jdk-unsafe</bundledSignature>
+                                         <bundledSignature>jdk-deprecated</bundledSignature>
+                                         <bundledSignature>jdk-system-out</bundledSignature>
+                                     </bundledSignatures>
+                                     <signaturesFiles>
+                                          <signaturesFile>${project.build.directory}/dev-tools/forbidden/core-signatures.txt</signaturesFile>
+                                          <signaturesFile>${project.build.directory}/dev-tools/forbidden/all-signatures.txt</signaturesFile>
+                                     </signaturesFiles>
+                                     <signatures>${forbidden.signatures}</signatures>
+                                     <suppressAnnotations><annotation>**.SuppressForbidden</annotation></suppressAnnotations>
+                                 </configuration>
+                             <phase>compile</phase>
+                             <goals>
+                                 <goal>check</goal>
+                             </goals>
+                         </execution>
+                         <execution>
+                             <id>check-forbidden-test-apis</id>
+                             <configuration>
+                                 <targetVersion>1.7</targetVersion>
+                                 <!-- disallow undocumented classes like sun.misc.Unsafe: -->
+                                 <internalRuntimeForbidden>true</internalRuntimeForbidden>
+                                 <!-- if the used Java version is too new, don't fail, just do nothing: -->
+                                 <failOnUnsupportedJava>false</failOnUnsupportedJava>
+                                 <!-- maven shade plugin is a nightmare -->
+                                 <failOnUnresolvableSignatures>false</failOnUnresolvableSignatures>
+                                 <bundledSignatures>
+                                     <!-- This will automatically choose the right signatures based on 'targetVersion': -->
+                                     <bundledSignature>jdk-unsafe</bundledSignature>
+                                     <bundledSignature>jdk-deprecated</bundledSignature>
+                                 </bundledSignatures>
+                                 <signaturesFiles>
+                                     <signaturesFile>${project.build.directory}/dev-tools/forbidden/test-signatures.txt</signaturesFile>
+                                     <signaturesFile>${project.build.directory}/dev-tools/forbidden/all-signatures.txt</signaturesFile>
+                                 </signaturesFiles>
+                                 <signatures>${forbidden.test.signatures}</signatures>
+                                 <suppressAnnotations><annotation>**.SuppressForbidden</annotation></suppressAnnotations>
+                             </configuration>
+                             <phase>test-compile</phase>
+                             <goals>
+                                 <goal>testCheck</goal>
+                             </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
+    <!-- TODO: add coverage and other static analysis tools, other profiles -->
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>dev</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>de.thetaphi</groupId>
+                        <artifactId>forbiddenapis</artifactId>
+                        <version>1.5.1</version>
+                        <executions>
+                            <execution>
+                                <id>check-forbidden-apis</id>
+                                <phase>none</phase>
+                            </execution>
+                            <execution>
+                                <id>check-forbidden-test-apis</id>
+                                <phase>none</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
