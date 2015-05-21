@@ -46,6 +46,9 @@
         <slf4j.version>1.6.2</slf4j.version>
         <log4j.version>1.2.17</log4j.version>
 
+        <!-- Build resources properties -->
+        <elasticsearch.tools.directory>${project.build.directory}/dev-tools</elasticsearch.tools.directory>
+
         <!-- Test properties -->
         <tests.jvms>auto</tests.jvms>
         <java.permGenSpace>-XX:MaxPermSize=128m</java.permGenSpace>
@@ -946,7 +949,7 @@
                         <resourceBundles>
                             <resourceBundle>org.elasticsearch:dev-tools:${elasticsearch.version}</resourceBundle>
                         </resourceBundles>
-                        <outputDirectory>${project.build.directory}/dev-tools</outputDirectory>
+                        <outputDirectory>${elasticsearch.tools.directory}</outputDirectory>
                         <!-- don't include dev-tools in artifacts -->
                         <attachToMain>false</attachToMain>
                         <attachToTest>false</attachToTest>
@@ -985,8 +988,8 @@
                                          <bundledSignature>jdk-system-out</bundledSignature>
                                      </bundledSignatures>
                                      <signaturesFiles>
-                                          <signaturesFile>${project.build.directory}/dev-tools/forbidden/core-signatures.txt</signaturesFile>
-                                          <signaturesFile>${project.build.directory}/dev-tools/forbidden/all-signatures.txt</signaturesFile>
+                                          <signaturesFile>${elasticsearch.tools.directory}/forbidden/core-signatures.txt</signaturesFile>
+                                          <signaturesFile>${elasticsearch.tools.directory}/forbidden/all-signatures.txt</signaturesFile>
                                      </signaturesFiles>
                                      <signatures>${forbidden.signatures}</signatures>
                                      <suppressAnnotations><annotation>**.SuppressForbidden</annotation></suppressAnnotations>
@@ -1012,8 +1015,8 @@
                                      <bundledSignature>jdk-deprecated</bundledSignature>
                                  </bundledSignatures>
                                  <signaturesFiles>
-                                     <signaturesFile>${project.build.directory}/dev-tools/forbidden/test-signatures.txt</signaturesFile>
-                                     <signaturesFile>${project.build.directory}/dev-tools/forbidden/all-signatures.txt</signaturesFile>
+                                     <signaturesFile>${elasticsearch.tools.directory}/forbidden/test-signatures.txt</signaturesFile>
+                                     <signaturesFile>${elasticsearch.tools.directory}/forbidden/all-signatures.txt</signaturesFile>
                                  </signaturesFiles>
                                  <signatures>${forbidden.test.signatures}</signatures>
                                  <suppressAnnotations><annotation>**.SuppressForbidden</annotation></suppressAnnotations>
