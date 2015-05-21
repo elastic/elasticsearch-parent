@@ -1059,4 +1059,7 @@
             </build>
         </profile>
     </profiles>
+    <modules>
+        <module>dev-tools</module>
+    </modules>
 </project>
