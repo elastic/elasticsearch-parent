@@ -451,49 +451,7 @@
     </dependencyManagement>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-clean-plugin</artifactId>
-                    <version>2.6.1</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-deploy-plugin</artifactId>
-                    <version>2.8.2</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-install-plugin</artifactId>
-                    <version>2.5.2</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-gpg-plugin</artifactId>
-                    <version>1.6</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>1.4</version>
-                    <executions>
-                        <execution>
-                            <id>enforce-versions</id>
-                            <goals>
-                                <goal>enforce</goal>
-                            </goals>
-                            <configuration>
-                                <rules>
-                                    <requireJavaVersion>
-                                        <version>[1.7,)</version>
-                                    </requireJavaVersion>
-                                </rules>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-
+          <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -650,12 +608,6 @@
                     </executions>
                 </plugin>
                 <plugin>
-                    <!-- We just declare which plugin version to use. Each project can have then its own settings -->
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-antrun-plugin</artifactId>
-                    <version>1.8</version>
-                </plugin>
-                <plugin>
                     <!-- we skip surefire to work with randomized testing above -->
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
@@ -677,6 +629,143 @@
                             </goals>
                         </execution>
                     </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-remote-resources-plugin</artifactId>
+                    <version>1.5</version>
+                    <configuration>
+                        <resourceBundles>
+                            <resourceBundle>org.elasticsearch:dev-tools:${elasticsearch.version}</resourceBundle>
+                        </resourceBundles>
+                        <outputDirectory>${elasticsearch.tools.directory}</outputDirectory>
+                        <!-- don't include dev-tools in artifacts -->
+                        <attachToMain>false</attachToMain>
+                        <attachToTest>false</attachToTest>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>process</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>de.thetaphi</groupId>
+                    <artifactId>forbiddenapis</artifactId>
+                    <version>1.8</version>
+
+                    <executions>
+                        <execution>
+                            <id>check-forbidden-apis</id>
+                                <configuration>
+                                     <targetVersion>1.7</targetVersion>
+                                     <!-- disallow undocumented classes like sun.misc.Unsafe: -->
+                                     <internalRuntimeForbidden>true</internalRuntimeForbidden>
+                                     <!-- if the used Java version is too new, don't fail, just do nothing: -->
+                                     <failOnUnsupportedJava>false</failOnUnsupportedJava>
+                                     <!-- maven shade plugin is a nightmare -->
+                                     <failOnUnresolvableSignatures>false</failOnUnresolvableSignatures>
+                                     <excludes>
+                                         <exclude>jsr166e/**</exclude>
+                                     </excludes>
+                                     <bundledSignatures>
+                                         <!-- This will automatically choose the right signatures based on 'targetVersion': -->
+                                         <bundledSignature>jdk-unsafe</bundledSignature>
+                                         <bundledSignature>jdk-deprecated</bundledSignature>
+                                         <bundledSignature>jdk-system-out</bundledSignature>
+                                     </bundledSignatures>
+                                     <signaturesFiles>
+                                          <signaturesFile>${elasticsearch.tools.directory}/forbidden/core-signatures.txt</signaturesFile>
+                                          <signaturesFile>${elasticsearch.tools.directory}/forbidden/all-signatures.txt</signaturesFile>
+                                     </signaturesFiles>
+                                     <signatures>${forbidden.signatures}</signatures>
+                                     <suppressAnnotations><annotation>**.SuppressForbidden</annotation></suppressAnnotations>
+                                 </configuration>
+                             <phase>compile</phase>
+                             <goals>
+                                 <goal>check</goal>
+                             </goals>
+                         </execution>
+                         <execution>
+                             <id>check-forbidden-test-apis</id>
+                             <configuration>
+                                 <targetVersion>1.7</targetVersion>
+                                 <!-- disallow undocumented classes like sun.misc.Unsafe: -->
+                                 <internalRuntimeForbidden>true</internalRuntimeForbidden>
+                                 <!-- if the used Java version is too new, don't fail, just do nothing: -->
+                                 <failOnUnsupportedJava>false</failOnUnsupportedJava>
+                                 <!-- maven shade plugin is a nightmare -->
+                                 <failOnUnresolvableSignatures>false</failOnUnresolvableSignatures>
+                                 <bundledSignatures>
+                                     <!-- This will automatically choose the right signatures based on 'targetVersion': -->
+                                     <bundledSignature>jdk-unsafe</bundledSignature>
+                                     <bundledSignature>jdk-deprecated</bundledSignature>
+                                 </bundledSignatures>
+                                 <signaturesFiles>
+                                     <signaturesFile>${elasticsearch.tools.directory}/forbidden/test-signatures.txt</signaturesFile>
+                                     <signaturesFile>${elasticsearch.tools.directory}/forbidden/all-signatures.txt</signaturesFile>
+                                 </signaturesFiles>
+                                 <signatures>${forbidden.test.signatures}</signatures>
+                                 <suppressAnnotations><annotation>**.SuppressForbidden</annotation></suppressAnnotations>
+                             </configuration>
+                             <phase>test-compile</phase>
+                             <goals>
+                                 <goal>testCheck</goal>
+                             </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>2.6.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.8.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>2.5.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>1.6</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>1.4</version>
+                    <executions>
+                        <execution>
+                            <id>enforce-versions</id>
+                            <goals>
+                                <goal>enforce</goal>
+                            </goals>
+                            <configuration>
+                                <rules>
+                                    <requireJavaVersion>
+                                        <version>[1.7,)</version>
+                                    </requireJavaVersion>
+                                </rules>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <!-- We just declare which plugin version to use. Each project can have then its own settings -->
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>1.8</version>
                 </plugin>
                 <plugin>
                     <!-- We just declare which plugin version to use. Each project can have then its own settings -->
@@ -940,93 +1029,6 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>
                     <version>2.15</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-remote-resources-plugin</artifactId>
-                    <version>1.5</version>
-                    <configuration>
-                        <resourceBundles>
-                            <resourceBundle>org.elasticsearch:dev-tools:${elasticsearch.version}</resourceBundle>
-                        </resourceBundles>
-                        <outputDirectory>${elasticsearch.tools.directory}</outputDirectory>
-                        <!-- don't include dev-tools in artifacts -->
-                        <attachToMain>false</attachToMain>
-                        <attachToTest>false</attachToTest>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>process</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>de.thetaphi</groupId>
-                    <artifactId>forbiddenapis</artifactId>
-                    <version>1.8</version>
-
-                    <executions>
-                        <execution>
-                            <id>check-forbidden-apis</id>
-                                <configuration>
-                                     <targetVersion>1.7</targetVersion>
-                                     <!-- disallow undocumented classes like sun.misc.Unsafe: -->
-                                     <internalRuntimeForbidden>true</internalRuntimeForbidden>
-                                     <!-- if the used Java version is too new, don't fail, just do nothing: -->
-                                     <failOnUnsupportedJava>false</failOnUnsupportedJava>
-                                     <!-- maven shade plugin is a nightmare -->
-                                     <failOnUnresolvableSignatures>false</failOnUnresolvableSignatures>
-                                     <excludes>
-                                         <exclude>jsr166e/**</exclude>
-                                     </excludes>
-                                     <bundledSignatures>
-                                         <!-- This will automatically choose the right signatures based on 'targetVersion': -->
-                                         <bundledSignature>jdk-unsafe</bundledSignature>
-                                         <bundledSignature>jdk-deprecated</bundledSignature>
-                                         <bundledSignature>jdk-system-out</bundledSignature>
-                                     </bundledSignatures>
-                                     <signaturesFiles>
-                                          <signaturesFile>${elasticsearch.tools.directory}/forbidden/core-signatures.txt</signaturesFile>
-                                          <signaturesFile>${elasticsearch.tools.directory}/forbidden/all-signatures.txt</signaturesFile>
-                                     </signaturesFiles>
-                                     <signatures>${forbidden.signatures}</signatures>
-                                     <suppressAnnotations><annotation>**.SuppressForbidden</annotation></suppressAnnotations>
-                                 </configuration>
-                             <phase>compile</phase>
-                             <goals>
-                                 <goal>check</goal>
-                             </goals>
-                         </execution>
-                         <execution>
-                             <id>check-forbidden-test-apis</id>
-                             <configuration>
-                                 <targetVersion>1.7</targetVersion>
-                                 <!-- disallow undocumented classes like sun.misc.Unsafe: -->
-                                 <internalRuntimeForbidden>true</internalRuntimeForbidden>
-                                 <!-- if the used Java version is too new, don't fail, just do nothing: -->
-                                 <failOnUnsupportedJava>false</failOnUnsupportedJava>
-                                 <!-- maven shade plugin is a nightmare -->
-                                 <failOnUnresolvableSignatures>false</failOnUnresolvableSignatures>
-                                 <bundledSignatures>
-                                     <!-- This will automatically choose the right signatures based on 'targetVersion': -->
-                                     <bundledSignature>jdk-unsafe</bundledSignature>
-                                     <bundledSignature>jdk-deprecated</bundledSignature>
-                                 </bundledSignatures>
-                                 <signaturesFiles>
-                                     <signaturesFile>${elasticsearch.tools.directory}/forbidden/test-signatures.txt</signaturesFile>
-                                     <signaturesFile>${elasticsearch.tools.directory}/forbidden/all-signatures.txt</signaturesFile>
-                                 </signaturesFiles>
-                                 <signatures>${forbidden.test.signatures}</signatures>
-                                 <suppressAnnotations><annotation>**.SuppressForbidden</annotation></suppressAnnotations>
-                             </configuration>
-                             <phase>test-compile</phase>
-                             <goals>
-                                 <goal>testCheck</goal>
-                             </goals>
-                        </execution>
-                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
