@@ -48,6 +48,7 @@
 
         <!-- Build resources properties -->
         <elasticsearch.tools.directory>${project.build.directory}/dev-tools</elasticsearch.tools.directory>
+        <elasticsearch.thirdparty.config>shaded</elasticsearch.thirdparty.config>
 
         <!-- Test properties -->
         <tests.jvms>auto</tests.jvms>
@@ -752,8 +753,6 @@
                                      <internalRuntimeForbidden>true</internalRuntimeForbidden>
                                      <!-- if the used Java version is too new, don't fail, just do nothing: -->
                                      <failOnUnsupportedJava>false</failOnUnsupportedJava>
-                                     <!-- maven shade plugin is a nightmare -->
-                                     <failOnUnresolvableSignatures>false</failOnUnresolvableSignatures>
                                      <excludes>
                                          <exclude>jsr166e/**</exclude>
                                      </excludes>
@@ -766,6 +765,7 @@
                                      <signaturesFiles>
                                           <signaturesFile>${elasticsearch.tools.directory}/forbidden/core-signatures.txt</signaturesFile>
                                           <signaturesFile>${elasticsearch.tools.directory}/forbidden/all-signatures.txt</signaturesFile>
+                                          <signaturesFile>${elasticsearch.tools.directory}/forbidden/third-party-${elasticsearch.thirdparty.config}-signatures.txt</signaturesFile>
                                      </signaturesFiles>
                                      <signatures>${forbidden.signatures}</signatures>
                                      <suppressAnnotations><annotation>**.SuppressForbidden</annotation></suppressAnnotations>
@@ -783,8 +783,6 @@
                                  <internalRuntimeForbidden>true</internalRuntimeForbidden>
                                  <!-- if the used Java version is too new, don't fail, just do nothing: -->
                                  <failOnUnsupportedJava>false</failOnUnsupportedJava>
-                                 <!-- maven shade plugin is a nightmare -->
-                                 <failOnUnresolvableSignatures>false</failOnUnresolvableSignatures>
                                  <bundledSignatures>
                                      <!-- This will automatically choose the right signatures based on 'targetVersion': -->
                                      <bundledSignature>jdk-unsafe</bundledSignature>
@@ -1044,18 +1042,19 @@
                     <version>1.8</version>
                     <executions>
                         <execution>
+                            <id>print-jvm</id>
                             <phase>validate</phase>
                             <goals>
                                 <goal>run</goal>
                             </goals>
                             <configuration>
                                 <target>
-                                    <echo>Using ${java.runtime.name} ${java.runtime.version} ${java.vendor}</echo>
+                                    <echo taskname="JVM">Using ${java.runtime.name} ${java.runtime.version} ${java.vendor}</echo>
                                 </target>
                             </configuration>
                         </execution>
                         <execution>
-                            <id>set-permGen</id>
+                            <id>set-permgen</id>
                             <phase>validate</phase>
                             <goals>
                                 <goal>run</goal>
@@ -1109,7 +1108,7 @@
                             <id>create-heapdump-directory</id>
                             <configuration>
                                 <target>
-                                    <echo message="Creating heapdump directory"/>
+                                    <echo taskname="heapdump" message="Creating heapdump directory"/>
                                     <mkdir dir="${tests.heapdump.path}"/>
                                 </target>
                             </configuration>

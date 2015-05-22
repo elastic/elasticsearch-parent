@@ -14,6 +14,9 @@
 # either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
 
+# For shaded dependencies, please put signatures in third-party-shaded.txt 
+# and third-party-unshaded.txt instead of here.
+
 @defaultMessage spawns threads with vague names; use a custom thread factory and name threads so that you can tell (by its name) which executor it is associated with
 
 java.util.concurrent.Executors#newFixedThreadPool(int)
@@ -63,9 +66,6 @@ java.lang.Math#abs(long)
 @defaultMessage Please do not try to stop the world
 java.lang.System#gc()
 
-@defaultMessage Use Long.compare instead we are on Java7
-com.google.common.primitives.Longs#compare(long,long)
-
 @defaultMessage Use Channels.* methods to write to channels. Do not write directly.
 java.nio.channels.WritableByteChannel#write(java.nio.ByteBuffer)
 java.nio.channels.FileChannel#write(java.nio.ByteBuffer, long)
@@ -78,48 +78,6 @@ java.nio.channels.FileChannel#read(java.nio.ByteBuffer, long)
 
 @defaultMessage Use Lucene.parseLenient instead it strips off minor version
 org.apache.lucene.util.Version#parseLeniently(java.lang.String)
-
-@defaultMessage unsafe encoders/decoders have problems in the lzf compress library.  Use variants of encode/decode functions which take Encoder/Decoder.
-com.ning.compress.lzf.impl.UnsafeChunkEncoders#createEncoder(int)
-com.ning.compress.lzf.impl.UnsafeChunkEncoders#createNonAllocatingEncoder(int)
-com.ning.compress.lzf.impl.UnsafeChunkEncoders#createEncoder(int, com.ning.compress.BufferRecycler)
-com.ning.compress.lzf.impl.UnsafeChunkEncoders#createNonAllocatingEncoder(int, com.ning.compress.BufferRecycler)
-com.ning.compress.lzf.impl.UnsafeChunkDecoder#<init>()
-com.ning.compress.lzf.parallel.CompressTask
-com.ning.compress.lzf.util.ChunkEncoderFactory#optimalInstance()
-com.ning.compress.lzf.util.ChunkEncoderFactory#optimalInstance(int)
-com.ning.compress.lzf.util.ChunkEncoderFactory#optimalNonAllocatingInstance(int)
-com.ning.compress.lzf.util.ChunkEncoderFactory#optimalInstance(com.ning.compress.BufferRecycler)
-com.ning.compress.lzf.util.ChunkEncoderFactory#optimalInstance(int, com.ning.compress.BufferRecycler)
-com.ning.compress.lzf.util.ChunkEncoderFactory#optimalNonAllocatingInstance(int, com.ning.compress.BufferRecycler)
-com.ning.compress.lzf.util.ChunkDecoderFactory#optimalInstance()
-com.ning.compress.lzf.util.LZFFileInputStream#<init>(java.io.File)
-com.ning.compress.lzf.util.LZFFileInputStream#<init>(java.io.FileDescriptor)
-com.ning.compress.lzf.util.LZFFileInputStream#<init>(java.lang.String)
-com.ning.compress.lzf.util.LZFFileOutputStream#<init>(java.io.File)
-com.ning.compress.lzf.util.LZFFileOutputStream#<init>(java.io.File, boolean)
-com.ning.compress.lzf.util.LZFFileOutputStream#<init>(java.io.FileDescriptor)
-com.ning.compress.lzf.util.LZFFileOutputStream#<init>(java.lang.String)
-com.ning.compress.lzf.util.LZFFileOutputStream#<init>(java.lang.String, boolean)
-com.ning.compress.lzf.LZFEncoder#encode(byte[])
-com.ning.compress.lzf.LZFEncoder#encode(byte[], int, int)
-com.ning.compress.lzf.LZFEncoder#encode(byte[], int, int, com.ning.compress.BufferRecycler)
-com.ning.compress.lzf.LZFEncoder#appendEncoded(byte[], int, int, byte[], int)
-com.ning.compress.lzf.LZFEncoder#appendEncoded(byte[], int, int, byte[], int, com.ning.compress.BufferRecycler)
-com.ning.compress.lzf.LZFCompressingInputStream#<init>(java.io.InputStream)
-com.ning.compress.lzf.LZFDecoder#fastDecoder()
-com.ning.compress.lzf.LZFDecoder#decode(byte[])
-com.ning.compress.lzf.LZFDecoder#decode(byte[], int, int)
-com.ning.compress.lzf.LZFDecoder#decode(byte[], byte[])
-com.ning.compress.lzf.LZFDecoder#decode(byte[], int, int, byte[])
-com.ning.compress.lzf.LZFInputStream#<init>(java.io.InputStream)
-com.ning.compress.lzf.LZFInputStream#<init>(java.io.InputStream, boolean)
-com.ning.compress.lzf.LZFInputStream#<init>(java.io.InputStream, com.ning.compress.BufferRecycler)
-com.ning.compress.lzf.LZFInputStream#<init>(java.io.InputStream, com.ning.compress.BufferRecycler, boolean)
-com.ning.compress.lzf.LZFOutputStream#<init>(java.io.OutputStream)
-com.ning.compress.lzf.LZFOutputStream#<init>(java.io.OutputStream, com.ning.compress.BufferRecycler)
-com.ning.compress.lzf.LZFUncompressor#<init>(com.ning.compress.DataHandler)
-com.ning.compress.lzf.LZFUncompressor#<init>(com.ning.compress.DataHandler, com.ning.compress.BufferRecycler)
 
 @defaultMessage Spawns a new thread which is solely under lucenes control use ThreadPool#estimatedTimeInMillisCounter instead
 org.apache.lucene.search.TimeLimitingCollector#getGlobalTimerThread()
