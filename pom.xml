@@ -1154,5 +1154,6 @@
     </profiles>
     <modules>
         <module>dev-tools</module>
+        <module>plugins</module>
     </modules>
 </project>
