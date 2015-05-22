@@ -86,6 +86,11 @@
                     <include>**/*.properties</include>
                 </includes>
             </testResource>
+            <!-- shared test resources like log4j.properties -->
+            <testResource>
+                <directory>${elasticsearch.tools.directory}/shared-test-resources</directory>
+                <filtering>false</filtering>
+            </testResource>
         </testResources>
 
         <pluginManagement>
