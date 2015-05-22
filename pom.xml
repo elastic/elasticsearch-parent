@@ -1153,6 +1153,9 @@
         </profile>
         <profile>
             <id>dev</id>
+            <properties>
+                <validate.skip>true</validate.skip>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
