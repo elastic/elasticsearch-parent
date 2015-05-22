@@ -51,7 +51,6 @@
 
         <!-- Test properties -->
         <tests.jvms>auto</tests.jvms>
-        <java.permGenSpace>-XX:MaxPermSize=128m</java.permGenSpace>
         <tests.shuffle>true</tests.shuffle>
         <tests.output>onerror</tests.output>
         <tests.client.ratio></tests.client.ratio>
@@ -727,6 +726,114 @@
                         </execution>
                     </executions>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>1.8</version>
+                    <executions>
+                        <execution>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                            <configuration>
+                                <target>
+                                    <echo>Using ${java.runtime.name} ${java.runtime.version} ${java.vendor}</echo>
+                                </target>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>set-permGen</id>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                            <configuration>
+                                <target>
+                                    <!-- if we are on java 1.7.* we set perm gen space since some tests need it otherwise we just inject a dummy value -->
+                                    <condition property="java.permGenSpace" value="-XX:MaxPermSize=128m" else="-Dsome.dummy.value=" >
+                                        <matches pattern="1\.7\..+$" string="${java.runtime.version}" />
+                                    </condition>
+                                </target>
+                                <exportAntProperties>true</exportAntProperties>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>invalid-patterns</id>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                            <configuration>
+                                <target unless="${validate.skip}">
+                                    <pathconvert pathsep="${line.separator}" dirsep="/" property="validate.patternsFound" setonempty="false">
+                                        <fileset dir="${basedir}">
+                                            <include name="**/*.java"/>
+                                            <include name="**/*.py"/>
+                                            <include name="**/*.txt"/>
+                                            <include name="**/*.xml"/>
+                                            <include name="**/*.rb"/>
+                                            <include name="**/*.pl"/>
+                                            <exclude name="**/org/elasticsearch/cluster/routing/shard_routes.txt"/>
+                                            <exclude name="**/target/**/*"/>
+                                            <exclude name="**/.metadata/**/*"/>
+                                            <exclude name="**/.idea/**/*"/>
+                                            <exclude name="**/eclipse-build/**/*"/>
+                                            <or>
+                                                <containsregexp expression="\bno(n|)commit\b" casesensitive="no"/>
+                                                <containsregexp expression="\t" casesensitive="no"/>
+                                            </or>
+                                        </fileset>
+                                        <map from="${basedir}${file.separator}" to="* "/>
+                                    </pathconvert>
+                                    <fail if="validate.patternsFound">The following files contain tabs or
+                                        nocommits:${line.separator}${validate.patternsFound}
+                                    </fail>
+                                </target>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <phase>generate-test-resources</phase>
+                            <id>create-heapdump-directory</id>
+                            <configuration>
+                                <target>
+                                    <echo message="Creating heapdump directory"/>
+                                    <mkdir dir="${tests.heapdump.path}"/>
+                                </target>
+                            </configuration>
+                            <goals>
+                                 <goal>run</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>tests</id>
+                            <phase>test</phase>
+                            <configuration>
+                                <skip>${skipTests}</skip>
+                                <!-- don't run if we skip the tests -->
+                                <failOnError>false</failOnError>
+                                <target>
+                                    <property name="runtime_classpath" refid="maven.runtime.classpath"/>
+                                    <property name="test_classpath" refid="maven.test.classpath"/>
+                                    <property name="plugin_classpath" refid="maven.plugin.classpath"/>
+                                    <taskdef resource="com/carrotsearch/junit4/antlib.xml">
+                                        <classpath>
+                                            <pathelement path="${plugin_classpath}"/>
+                                            <pathelement path="${runtime_classpath}"/>
+                                            <pathelement path="${test_classpath}"/>
+                                        </classpath>
+                                    </taskdef>
+                                    <tophints max="${tests.topn}">
+                                        <file file="${basedir}/${execution.hint.file}"/>
+                                    </tophints>
+                                </target>
+                            </configuration>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         <pluginManagement>
             <plugins>
@@ -776,12 +883,6 @@
                     </executions>
                 </plugin>
 
-                <plugin>
-                    <!-- We just declare which plugin version to use. Each project can have then its own settings -->
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-antrun-plugin</artifactId>
-                    <version>1.8</version>
-                </plugin>
                 <plugin>
                     <!-- We just declare which plugin version to use. Each project can have then its own settings -->
                     <groupId>org.apache.maven.plugins</groupId>
