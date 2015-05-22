@@ -49,6 +49,8 @@
         <!-- Build resources properties -->
         <elasticsearch.tools.directory>${project.build.directory}/dev-tools</elasticsearch.tools.directory>
         <elasticsearch.thirdparty.config>shaded</elasticsearch.thirdparty.config>
+        <elasticsearch.license.header>${elasticsearch.tools.directory}/license-check/elasticsearch_license_header.txt</elasticsearch.license.header>
+        <elasticsearch.license.headerDefinition>${elasticsearch.tools.directory}/license-check/license_header_definition.xml</elasticsearch.license.headerDefinition>
 
         <!-- Test properties -->
         <tests.jvms>auto</tests.jvms>
@@ -474,6 +476,10 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                 </plugin>
                 <plugin>
+                    <groupId>com.mycila</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                </plugin>
+                <plugin>
                     <groupId>com.carrotsearch.randomizedtesting</groupId>
                     <artifactId>junit4-maven-plugin</artifactId>
                 </plugin>
@@ -863,6 +869,31 @@
                     <version>1.8</version>
                 </plugin>
 
+                <plugin>
+                    <groupId>com.mycila</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <version>2.5</version>
+                    <configuration>
+                        <header>${elasticsearch.license.header}</header>
+                        <headerDefinitions>
+                            <headerDefinition>${elasticsearch.license.headerDefinition}</headerDefinition>
+                        </headerDefinitions>
+                        <includes>
+                            <include>src/main/java/org/elasticsearch/**/*.java</include>
+                            <include>src/test/java/org/elasticsearch/**/*.java</include>
+                        </includes>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>check-license-headers</id>
+                            <phase>compile</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                     </executions>
+                </plugin>
+
                 <!-- Eclipse IDE specific settings -->
                 <!-- make m2e stfu -->
                 <plugin>
@@ -1196,6 +1227,16 @@
                             </execution>
                             <execution>
                                 <id>check-forbidden-test-apis</id>
+                                <phase>none</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.mycila</groupId>
+                        <artifactId>license-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>check-license-headers</id>
                                 <phase>none</phase>
                             </execution>
                         </executions>
