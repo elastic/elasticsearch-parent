@@ -1077,12 +1077,6 @@
                             </goals>
                         </execution>
                     </executions>
-                    <configuration>
-                        <excludes>
-                            <exclude>jsr166e/**</exclude>
-                            <exclude>org/apache/lucene/**</exclude>
-                        </excludes>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -1219,7 +1213,6 @@
             </plugins>
         </pluginManagement>
     </build>
-    <!-- TODO: add coverage and other static analysis tools, other profiles -->
     <profiles>
         <profile>
             <id>default</id>
@@ -1293,6 +1286,36 @@
                                 <phase>none</phase>
                             </execution>
                         </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- code coverage build -->
+        <profile>
+            <id>coverage</id>
+            <activation>
+                <property>
+                    <name>tests.coverage</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <!--  must be on the classpath  -->
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>org.jacoco.agent</artifactId>
+                    <classifier>runtime</classifier>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+            <properties>
+                <tests.security.manager>false</tests.security.manager> <!-- security policy doesn't have appropriate permissions for instrumentation -->
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
                     </plugin>
                 </plugins>
             </build>
