@@ -1117,7 +1117,7 @@
                             </configuration>
                         </execution>
                         <execution>
-                            <id>invalid-patterns</id>
+                            <id>check-invalid-patterns</id>
                             <phase>validate</phase>
                             <goals>
                                 <goal>run</goal>
@@ -1164,7 +1164,7 @@
                             </goals>
                         </execution>
                         <execution>
-                            <id>tests</id>
+                            <id>tests-top-hints</id>
                             <phase>test</phase>
                             <configuration>
                                 <skip>${skipTests}</skip>
@@ -1226,11 +1226,37 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
         </profile>
+        <!-- omits noise -->
+        <profile>
+            <id>pom</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <file>
+                    <missing>${basedir}/src</missing>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>create-heapdump-directory</id>
+                                <phase>none</phase>
+                            </execution>
+                            <execution>
+                                <id>tests-top-hints</id>
+                                <phase>none</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- skips validation checks -->
         <profile>
             <id>dev</id>
-            <properties>
-                <validate.skip>true</validate.skip>
-            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -1253,6 +1279,16 @@
                         <executions>
                             <execution>
                                 <id>check-license-headers</id>
+                                <phase>none</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>check-invalid-patterns</id>
                                 <phase>none</phase>
                             </execution>
                         </executions>
