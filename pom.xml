@@ -36,6 +36,8 @@
         <!-- elasticsearch stack -->
         <elasticsearch.version>2.0.0-SNAPSHOT</elasticsearch.version>
         <jvm.executable>${java.home}${file.separator}bin${file.separator}java</jvm.executable>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
 
         <!-- libraries -->
         <lucene.version>5.2.0</lucene.version>
@@ -476,6 +478,10 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                 </plugin>
                 <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>buildnumber-maven-plugin</artifactId>
+                </plugin>
+                <plugin>
                     <groupId>com.mycila</groupId>
                     <artifactId>license-maven-plugin</artifactId>
                 </plugin>
@@ -540,7 +546,7 @@
                             <configuration>
                                 <rules>
                                     <requireJavaVersion>
-                                        <version>[1.7,)</version>
+                                        <version>[${maven.compiler.source},)</version>
                                     </requireJavaVersion>
                                 </rules>
                             </configuration>
@@ -552,8 +558,6 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.3</version>
                     <configuration>
-                        <source>1.7</source>
-                        <target>1.7</target>
                         <fork>true</fork>
                         <maxmem>512m</maxmem>
                         <!-- REMOVE WHEN UPGRADE:
@@ -754,7 +758,7 @@
                         <execution>
                             <id>check-forbidden-apis</id>
                                 <configuration>
-                                     <targetVersion>1.7</targetVersion>
+                                     <targetVersion>${maven.compiler.target}</targetVersion>
                                      <!-- disallow undocumented classes like sun.misc.Unsafe: -->
                                      <internalRuntimeForbidden>true</internalRuntimeForbidden>
                                      <!-- if the used Java version is too new, don't fail, just do nothing: -->
@@ -784,7 +788,7 @@
                          <execution>
                              <id>check-forbidden-test-apis</id>
                              <configuration>
-                                 <targetVersion>1.7</targetVersion>
+                                 <targetVersion>${maven.compiler.target}</targetVersion>
                                  <!-- disallow undocumented classes like sun.misc.Unsafe: -->
                                  <internalRuntimeForbidden>true</internalRuntimeForbidden>
                                  <!-- if the used Java version is too new, don't fail, just do nothing: -->
@@ -857,10 +861,22 @@
                     <version>2.1.2</version>
                 </plugin>
                 <plugin>
-                    <!-- We just declare which plugin version to use. Each project can have then its own settings -->
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>2.5</version>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            </manifest>
+                            <manifestEntries>
+                                <Build-Time>${timestamp}</Build-Time>
+                                <Implementation-Build>${buildNumber}</Implementation-Build>
+                                <X-Compile-Source>${maven.compiler.source}</X-Compile-Source>
+                                <X-Compile-Target>${maven.compiler.target}</X-Compile-Target>
+                            </manifestEntries>
+                        </archive>
+                    </configuration>
                 </plugin>
 
                 <plugin>
