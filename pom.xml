@@ -585,6 +585,7 @@
                             </goals>
                             <configuration>
                                 <jvm>${jvm.executable}</jvm>
+                                <argLine>${tests.jvm.argline}</argLine>
                                 <heartbeat>10</heartbeat>
                                 <jvmOutputAction>warn</jvmOutputAction>
                                 <leaveTemporary>true</leaveTemporary>
