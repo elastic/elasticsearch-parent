@@ -482,10 +482,6 @@
                     <artifactId>buildnumber-maven-plugin</artifactId>
                 </plugin>
                 <plugin>
-                    <groupId>com.mycila</groupId>
-                    <artifactId>license-maven-plugin</artifactId>
-                </plugin>
-                <plugin>
                     <groupId>com.carrotsearch.randomizedtesting</groupId>
                     <artifactId>junit4-maven-plugin</artifactId>
                 </plugin>
@@ -1244,6 +1240,25 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
+            <build>
+                <plugins>
+                   <plugin>
+                    <groupId>com.mycila</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                   </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- license profile, to generate third party license file -->
+        <profile>
+            <id>license</id>
+            <activation>
+                <property>
+                    <name>license.generation</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <!-- not including license-maven-plugin is sufficent to expose default license -->
         </profile>
         <!-- omits noise -->
         <profile>
