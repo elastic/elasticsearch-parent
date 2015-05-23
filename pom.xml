@@ -879,8 +879,11 @@
                                 <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             </manifest>
                             <manifestEntries>
-                                <Build-Time>${timestamp}</Build-Time>
-                                <Implementation-Build>${buildNumber}</Implementation-Build>
+                                <X-Build-Branch>${scmBranch}</X-Build-Branch>
+                                <X-Build-Number>${buildNumber}</X-Build-Number>
+                                <X-Build-Time>${timestamp}</X-Build-Time>
+                                <X-Compile-Elasticsearch-Version>${elasticsearch.version}</X-Compile-Elasticsearch-Version>
+                                <X-Compile-Lucene-Version>${lucene.version}</X-Compile-Lucene-Version>
                                 <X-Compile-Source-JDK>${maven.compiler.source}</X-Compile-Source-JDK>
                                 <X-Compile-Target-JDK>${maven.compiler.target}</X-Compile-Target-JDK>
                             </manifestEntries>
