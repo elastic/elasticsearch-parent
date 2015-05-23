@@ -872,8 +872,8 @@
                             <manifestEntries>
                                 <Build-Time>${timestamp}</Build-Time>
                                 <Implementation-Build>${buildNumber}</Implementation-Build>
-                                <X-Compile-Source>${maven.compiler.source}</X-Compile-Source>
-                                <X-Compile-Target>${maven.compiler.target}</X-Compile-Target>
+                                <X-Compile-Source-JDK>${maven.compiler.source}</X-Compile-Source-JDK>
+                                <X-Compile-Target-JDK>${maven.compiler.target}</X-Compile-Target-JDK>
                             </manifestEntries>
                         </archive>
                     </configuration>
