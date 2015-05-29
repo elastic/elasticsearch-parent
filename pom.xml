@@ -44,7 +44,7 @@
         <lucene.snapshot.revision>1682335</lucene.snapshot.revision>
         <lucene.maven.version>5.2.0-snapshot-${lucene.snapshot.revision}</lucene.maven.version>
         <testframework.version>2.1.14</testframework.version>
-        <jackson.version>2.5.1</jackson.version>
+        <jackson.version>2.5.3</jackson.version>
         <slf4j.version>1.6.2</slf4j.version>
         <log4j.version>1.2.17</log4j.version>
 
