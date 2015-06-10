@@ -6,7 +6,7 @@
 
     <groupId>org.elasticsearch</groupId>
     <artifactId>elasticsearch-parent</artifactId>
-    <version>1.6.0-SNAPSHOT</version>
+    <version>1.7.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Elasticsearch Parent POM</name>
     <description>Elasticsearch Parent POM</description>
@@ -34,7 +34,7 @@
 
     <properties>
         <!-- elasticsearch stack -->
-        <elasticsearch.version>1.6.0-SNAPSHOT</elasticsearch.version>
+        <elasticsearch.version>1.7.0-SNAPSHOT</elasticsearch.version>
 
         <!-- libraries -->
         <lucene.version>4.10.4</lucene.version>
