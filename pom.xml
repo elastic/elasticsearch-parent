@@ -34,7 +34,7 @@
 
     <properties>
         <!-- elasticsearch stack -->
-        <elasticsearch.version>1.6.0-SNAPSHOT</elasticsearch.version>
+        <elasticsearch.version>1.6.0</elasticsearch.version>
 
         <!-- libraries -->
         <lucene.version>4.10.4</lucene.version>
