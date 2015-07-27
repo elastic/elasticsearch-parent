@@ -49,7 +49,7 @@
         <log4j.version>1.2.17</log4j.version>
 
         <!-- Build resources properties -->
-        <elasticsearch.tools.directory>${project.build.directory}/dev-tools</elasticsearch.tools.directory>
+        <elasticsearch.tools.directory>${project.parent.build.directory}/dev-tools</elasticsearch.tools.directory>
         <elasticsearch.thirdparty.config>shaded</elasticsearch.thirdparty.config>
         <elasticsearch.license.header>${elasticsearch.tools.directory}/license-check/elasticsearch_license_header.txt</elasticsearch.license.header>
         <elasticsearch.license.headerDefinition>${elasticsearch.tools.directory}/license-check/license_header_definition.xml</elasticsearch.license.headerDefinition>
